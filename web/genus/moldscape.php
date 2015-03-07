@@ -4,7 +4,7 @@ class Moldscape {
 
   const TEMPLATEDIR = 'views/';
 
-	var $bind, $dolayout, $tplate;
+  var $bind, $dolayout, $tplate;
     
   static function render( $t, $bind=null, $dolayout=false ) {
     if ($dolayout) {
@@ -24,7 +24,11 @@ class Moldscape {
       $html 
     );
     $html = preg_replace( '/\{\=(\w+)\=\}/e', 'constant("$1")', $html );
-    $html = preg_replace( '/\{\!([A-Za-z0-9_:,\(\)]+)\!\}/e', 'lambdamu("$1")', $html );
+    $html = preg_replace( 
+      '/\{\!([A-Za-z0-9_:,\(\)]+)\!\}/e', 
+      'lambdamu("$1")', 
+      $html 
+    );
     if ($bind) {
       foreach ($bind as $b => $v) {
         $rtext = '{{' . $b . '}}';
@@ -37,25 +41,28 @@ class Moldscape {
   function __construct( $t="default", $dolayout=true ) {
     $this->tplate = $t;
     $this->dolayout = $dolayout;
-		$this->bind = array();
-	}
+    $this->bind = array();
+  }
 
-	function append( $b, $c ) { 
+  function append( $b, $c ) { 
     if (! isset( $this->bind[$b] )) { $this->bind[$b] = ''; }
     $this->bind[$b] .= $c; 
   }
 
   function generate() {
     return self::render( $this->tplate, $this->bind, $this->dolayout );
-	}
- 
-	function set( $b, $c ) { $this->bind[$b] = $c; }
+  }
+
+  function set( $b, $c ) { 
+    $this->bind[$b] = $c; 
+  }
 
 }
 
 function lambdamu( $fcall ) {
   $farg = array();
-  # Strip dynamic function arguments, encased in parenthesis, though they be optional
+  # Strip dynamic function arguments, encased in parenthesis, 
+  # though they be optional
   if (preg_match( '/\((.*?)\)/', $fcall, $mat )) {
     $farg = explode( ',', $mat[1] );
     $fcall = preg_replace( '/\(.*?\)/', '', $fcall );
