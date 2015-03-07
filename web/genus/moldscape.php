@@ -17,7 +17,7 @@ class Moldscape {
     } else {
       $html = file_get_contents( self::TEMPLATEDIR . $t . '.tpl' );
     }
-    $vdir = TEMPLATEDIR;
+    $vdir = self::TEMPLATEDIR;
     $html = preg_replace( 
       '/\{\#(\w+)\#\}/e', 
       'file_get_contents( "$vdir" . "$1.tpl" )', 
